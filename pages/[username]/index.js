@@ -1,11 +1,17 @@
 import UserProfile from '../../components/UserProfile';
-import PostFeed from '../../components/Postfeed';
+
 import { getUserWithUsername, postToJSON } from '../../lib/firebase';
 
 export async function getServerSideProps({ query }) {
 	const { username } = query;
 
 	const userDoc = await getUserWithUsername(username);
+
+	if (!userDoc) {
+		return {
+			notFound: true,
+		};
+	}
 
 	let user = null;
 	let posts = null;
@@ -20,10 +26,10 @@ export async function getServerSideProps({ query }) {
 	};
 }
 export default function UserProfilePage({ user, posts }) {
+	console.log(user);
 	return (
 		<main>
 			<UserProfile user={user} />
-			<PostFeed posts={posts} />
 		</main>
 	);
 }
